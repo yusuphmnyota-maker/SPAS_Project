@@ -1,0 +1,61 @@
+/* Modern styles for Add Student form */
+:root{
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --primary:#2b6ef6;
+    --muted:#6b7280;
+    --success:#16a34a;
+    --error:#dc2626;
+}
+
+*{box-sizing:border-box}
+body{
+    margin:0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    background:linear-gradient(180deg,var(--bg),#e9eef8);
+    color:#0f172a;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+}
+
+.container{width:100%;max-width:720px}
+.card{
+    background:var(--card);
+    border-radius:12px;
+    box-shadow:0 8px 24px rgba(12,20,40,0.08);
+    padding:28px;
+}
+.title{margin:0 0 12px 0;font-size:20px}
+.message{padding:12px;border-radius:8px;margin-bottom:16px;font-weight:600}
+.message.success{background:rgba(22,163,74,0.12);color:var(--success);border:1px solid rgba(22,163,74,0.16)}
+.message.error{background:rgba(220,38,38,0.06);color:var(--error);border:1px solid rgba(220,38,38,0.12)}
+
+.student-form .field{display:flex;flex-direction:column;margin-bottom:12px}
+.student-form label{font-size:13px;color:var(--muted);margin-bottom:6px}
+.student-form input[type="text"],
+.student-form select{padding:10px 12px;border-radius:8px;border:1px solid #e6e9f2;background:#fbfdff;font-size:15px}
+.student-form input:focus, .student-form select:focus{outline:none;box-shadow:0 0 0 4px rgba(43,110,246,0.08);border-color:var(--primary)}
+
+.actions{display:flex;gap:8px;align-items:center;margin-top:8px}
+.btn-primary{background:var(--primary);color:white;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:600}
+.btn-primary:hover{filter:brightness(.98);transform:translateY(-1px)}
+.btn-link{color:var(--muted);text-decoration:none;padding:10px 12px;border-radius:8px}
+
+@media (max-width:480px){
+    .card{padding:18px}
+    .title{font-size:18px}
+    .actions{flex-direction:column;align-items:stretch}
+    .btn-link{text-align:center}
+}
+
+/* Table styles used by report.php */
+.muted{color:var(--muted);font-size:14px}
+.search-input{min-width:220px}
+.table-wrap{margin-top:8px}
+table.students{background:white}
+@media (max-width:600px){
+    .search-input{min-width:120px}
+}
