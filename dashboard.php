@@ -1,14 +1,14 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['username'])){
+if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit;
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Dashboard</title>
     <meta charset="utf-8">
@@ -16,23 +16,18 @@ if(!isset($_SESSION['username'])){
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-                <h1 class="title">Welcome to SPAS Dashboard</h1>
-            </div>
+    <div class="dashboard-box">
+        <h1>Welcome to SPAS Dashboard</h1>
 
-            <ul class="dashboard-menu">
-                <li><a href="students/add_student.php">Add Student</a></li>
-                <li><a href="students/view_students.php">View Students</a></li>
-                <li><a href="subjects/add_subject.php">Add Subject</a></li>
-                <li><a href="marks/add_marks.php">Add Marks</a></li>
-                <li><a href="marks/view_marks.php">View Marks</a></li>
-                <li><a href="reports/performance.php">Performance Report</a></li>
-                <li><a href="logout.php" class="logout-link">Logout</a></li>
-            </ul>
-        </div>
+        <ul class="dashboard-menu">
+            <li><a href="students/add_student.php">Add Student</a></li>
+            <li><a href="students/view_students.php">View Students</a></li>
+            <li><a href="subjects/add_subject.php">Add Subject</a></li>
+            <li><a href="marks/add_marks.php">Add Marks</a></li>
+            <li><a href="marks/view_marks.php">View Marks</a></li>
+            <li><a href="reports/performance.php">Performance Report</a></li>
+            <li><a href="logout.php" class="logout-link">Logout</a></li>
+        </ul>
     </div>
 </body>
 </html>
-

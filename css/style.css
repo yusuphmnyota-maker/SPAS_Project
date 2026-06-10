@@ -1,253 +1,173 @@
-:root {
-    --bg: #eff6ff;
-    --surface: #ffffff;
-    --primary: #3b82f6;
-    --primary-dark: #1d4ed8;
-    --muted: #64748b;
-    --border: #dbeafe;
-    --success: #16a34a;
-    --error: #dc2626;
-    --text: #0f172a;
-}
-
+/* 1. Mipangilio ya Kimsingi */
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    margin: 0;
-    min-height: 100vh;
+    background-color: #f4f6f9;
+    color: #333;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
-    color: var(--text);
-}
-
-.container {
-    width: 100%;
-    max-width: 560px;
-    margin: 0 auto;
+    align-items: center;
+    min-height: 100vh;
     padding: 20px;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.card {
+/* 2. Mifumo ya Maboksi (Containers) */
+.login-box, .dashboard-box, .form-box, .list-box {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
-    background: var(--surface);
-    border-radius: 18px;
-    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-    padding: 24px;
 }
 
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 26px;
-    gap: 12px;
-}
+.login-box, .form-box { max-width: 450px; }
+.dashboard-box { max-width: 500px; text-align: center; }
+.list-box { max-width: 1000px; }
 
-.title {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 700;
+/* 3. Maandishi na Vichwa vya Habari */
+h1, h2 {
+    color: #1e3a8a;
+    margin-bottom: 20px;
+    font-size: 24px;
 }
+.login-box h1, .dashboard-box h1 { text-align: center; font-size: 22px; }
 
-.subject-form,
-.student-form,
-.marks-form {
+/* 4. Mfumo wa Form na Input */
+form {
     display: flex;
     flex-direction: column;
-    gap: 18px;
-}
-
-.field {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    gap: 15px;
 }
 
 label {
-    font-size: 14px;
     font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
+    font-size: 14px;
+    color: #4b5563;
+    margin-bottom: -10px;
 }
 
-input[type='text'],
-input[type='number'],
-input[type='password'],
-select {
+input[type="text"], input[type="password"], input[type="number"], select {
     width: 100%;
-    padding: 14px 16px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: #f8fbff;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
     font-size: 15px;
-    color: var(--text);
-    transition: border-color 0.25s ease, box-shadow 0.25s ease;
-}
-
-input[type='text']:focus,
-input[type='number']:focus,
-input[type='password']:focus,
-select:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
-    background: #ffffff;
+    transition: border 0.2s;
 }
 
-button,
-.btn-primary {
-    background: var(--primary);
-    color: #fff;
+input:focus, select:focus {
+    border-color: #3b82f6;
+}
+
+/* 5. Vifungo na Viungo (Buttons & Links) */
+button, .btn-primary, .btn-link, .btn-edit, .btn-delete {
+    padding: 10px 16px;
     border: none;
-    border-radius: 14px;
-    padding: 14px 24px;
+    border-radius: 6px;
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 12px 24px rgba(59, 130, 246, 0.18);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-}
-
-button:hover,
-.btn-primary:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.05);
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-.login-form .field {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.login-form .field label {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-}
-
-.dashboard-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.dashboard-menu a {
-    display: block;
-    padding: 12px 16px;
-    border-radius: 12px;
-    background: #f8fbff;
-    color: var(--text);
     text-decoration: none;
-    font-weight: 600;
-    border: 1px solid #dbeafe;
-    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    display: inline-block;
+    text-align: center;
+    transition: background 0.2s;
 }
 
-.dashboard-menu a:hover {
-    background: #eef4ff;
-    border-color: #c7d8ff;
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.12);
+.btn-primary, button[type="submit"] {
+    background-color: #2563eb;
+    color: white;
 }
-
-.logout-link {
-    background: #fef2f2;
-    color: #b91c1c;
-    border-color: #fecaca;
-}
-
-.logout-link:hover {
-    background: #fee2e2;
-    border-color: #fca5a5;
-}
+.btn-primary:hover, button[type="submit"]:hover { background-color: #1d4ed8; }
 
 .btn-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 20px;
-    border-radius: 14px;
-    color: var(--muted);
-    text-decoration: none;
-    border: 1px solid transparent;
-    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    background-color: #4b5563;
+    color: white;
 }
+.btn-link:hover { background-color: #374151; }
 
-.btn-link:hover {
-    background: rgba(59, 130, 246, 0.08);
-    border-color: rgba(59, 130, 246, 0.2);
-    color: var(--primary-dark);
-}
+.btn-edit { background-color: #10b981; color: white; padding: 6px 12px; font-size: 13px; }
+.btn-edit:hover { background-color: #059669; }
 
-.actions {
+.btn-delete { background-color: #ef4444; color: white; padding: 6px 12px; font-size: 13px; }
+.btn-delete:hover { background-color: #dc2626; }
+
+/* Menu ya Dashboard */
+.dashboard-menu {
+    list-style: none;
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-.message {
-    border-radius: 14px;
-    padding: 16px 18px;
+.dashboard-menu li a {
+    display: block;
+    padding: 12px;
+    background: #f3f4f6;
+    color: #1f2937;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+}
+.dashboard-menu li a:hover { background: #e5e7eb; color: #2563eb; }
+.dashboard-menu .logout-link { background: #fee2e2; color: #dc2626; }
+.dashboard-menu .logout-link:hover { background: #fca5a5; color: #b91c1c; }
+
+/* Navigation ya kurasa za List */
+.action-links {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.action-links input { max-width: 250px; }
+
+/* 6. Mipangilio ya Majedwali (Tables) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+    background-color: #f8fafc;
+    color: #475569;
     font-weight: 600;
 }
 
-.message.success {
-    background: rgba(22, 163, 74, 0.1);
-    color: #166534;
-    border: 1px solid rgba(22, 163, 74, 0.2);
+tr:hover { background-color: #f8fafc; }
+
+/* 7. Ujumbe wa Mfumo (Messages) */
+.msg, .error {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
 }
+.msg { background-color: #d1fae5; color: #065f46; }
+.error { background-color: #fee2e2; color: #991b1b; }
 
-.message.error {
-    background: rgba(220, 38, 38, 0.08);
-    color: #b91c1c;
-    border: 1px solid rgba(220, 38, 38, 0.2);
-}
+/* Helpers */
+.center { text-align: center; }
+.font-bold { font-weight: bold; }
+.no-data { text-align: center; color: #9ca3af; padding: 20px; }
 
-h1, h2, h3, h4, h5, h6 {
-    margin: 0;
-}
-
-@media (max-width: 700px) {
-    .container {
-        padding: 18px;
-        min-height: auto;
-    }
-
-    .card {
-        padding: 24px;
-    }
-
-    .card-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .actions {
-        flex-direction: column;
-    }
-}
-.login{
-    display: flex;
+/* Mfumo wa Ku-print */
+@media print {
+    body { background: white; padding: 0; }
+    .list-box { box-shadow: none; padding: 0; }
+    .action-links, .btn-edit, .btn-delete { display: none !important; }
 }

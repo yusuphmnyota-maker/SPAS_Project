@@ -1,7 +1,7 @@
 <?php
 $conn = mysqli_connect("localhost", "root", "", "spas_db");
 
-if(!$conn){
-    die("Connection Failed");
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 ?>

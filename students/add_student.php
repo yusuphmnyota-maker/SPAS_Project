@@ -2,101 +2,65 @@
 include('../config/connection.php');
 
 $message = '';
-$messageType = '';
 
-if(isset($_POST['save'])){
-    
-    // Validate input
+if (isset($_POST['save'])) {
     $firstname = trim($_POST['firstname'] ?? '');
     $lastname = trim($_POST['lastname'] ?? '');
-    $gender = $_POST['gender'] ?? '';
     $class = trim($_POST['class'] ?? '');
+    $gender = $_POST['gender'] ?? '';
 
-    if(empty($firstname) || empty($lastname) || empty($gender) || empty($class)){
+    if (empty($firstname) || empty($lastname) || empty($class) || empty($gender)) {
         $message = "All fields are required!";
-        $messageType = "error";
     } else {
-        // Use prepared statements to prevent SQL injection
-        $query = "INSERT INTO students(firstname, lastname, gender, class) VALUES(?, ?, ?, ?)";
-        $stmt = $conn->prepare($query);
+        $stmt = $conn->prepare("INSERT INTO students (firstname, lastname, class, gender) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $firstname, $lastname, $class, $gender);
         
-        if($stmt){
-            $stmt->bind_param("ssss", $firstname, $lastname, $gender, $class);
-            
-            if($stmt->execute()){
-                $message = "Student Added Successfully!";
-                $messageType = "success";
-                
-                // Clear form
-                $_POST = array();
-            } else {
-                $message = "Error adding student: " . $stmt->error;
-                $messageType = "error";
-            }
-            $stmt->close();
+        if ($stmt->execute()) {
+            $message = "Student Added Successfully!";
         } else {
-            $message = "Database error: " . $conn->error;
-            $messageType = "error";
+            $message = "Error adding student.";
         }
+        $stmt->close();
     }
 }
 ?>
 
-
-
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add Student</title>
-    <link rel="stylesheet" href="css/addstudent.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <div class="form-box">
+        <h2>Add New Student</h2>
 
-<div class="container">
-    <div class="card">
-        <h2 class="title">Add Student</h2>
-
-        <?php if(!empty($message)): ?>
-            <div class="message <?php echo $messageType; ?>">
-                <?php echo htmlspecialchars($message); ?>
-            </div>
+        <?php if (!empty($message)): ?>
+            <p class="msg"><?php echo htmlspecialchars($message); ?></p>
         <?php endif; ?>
 
-        <form method="POST" class="student-form" novalidate>
-            <div class="field">
-                <label for="firstname">First Name</label>
-                <input id="firstname" type="text" name="firstname" placeholder="First Name" required value="<?php echo htmlspecialchars($_POST['firstname'] ?? ''); ?>" autofocus>
-            </div>
+        <form method="POST">
+            <label>First Name</label>
+            <input type="text" name="firstname" placeholder="First Name" required>
 
-            <div class="field">
-                <label for="lastname">Last Name</label>
-                <input id="lastname" type="text" name="lastname" placeholder="Last Name" required value="<?php echo htmlspecialchars($_POST['lastname'] ?? ''); ?>">
-            </div>
+            <label>Last Name</label>
+            <input type="text" name="lastname" placeholder="Last Name" required>
 
-            <div class="field">
-                <label for="class">Class</label>
-                <input id="class" type="text" name="class" placeholder="e.g Form Two" required value="<?php echo htmlspecialchars($_POST['class'] ?? ''); ?>">
-            </div>
+            <label>Class</label>
+            <input type="text" name="class" placeholder="e.g Form Two" required>
 
-            <div class="field">
-                <label for="gender">Gender</label>
-                <select id="gender" name="gender" required>
-                    <option value="">Select gender</option>
-                    <option value="Male" <?php echo (($_POST['gender'] ?? '') === 'Male') ? 'selected' : ''; ?>>Male</option>
-                    <option value="Female" <?php echo (($_POST['gender'] ?? '') === 'Female') ? 'selected' : ''; ?>>Female</option>
-                </select>
-            </div>
+            <label>Gender</label>
+            <select name="gender" required>
+                <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
 
-            <div class="actions">
-                <button type="submit" name="save" class="btn-primary">Save Student</button>
-                <a href="../dashboard.php" class="btn-link">Back</a>
-            </div>
+            <button type="submit" name="save" class="btn-primary">Save Student</button>
+            <a href="../dashboard.php" class="btn-link">Back</a>
         </form>
     </div>
-</div>
-
 </body>
 </html>
