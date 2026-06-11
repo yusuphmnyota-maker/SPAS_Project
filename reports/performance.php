@@ -44,7 +44,7 @@ $result = mysqli_query($conn, $query);
                 while ($row = mysqli_fetch_assoc($result)): 
                     $avg = $row['average_marks'];
 
-                    // Logic ya Grades
+                    // Grades
                     if ($avg >= 81) $grade = "A";
                     elseif ($avg >= 61) $grade = "B";
                     elseif ($avg >= 41) $grade = "C";
@@ -63,12 +63,12 @@ $result = mysqli_query($conn, $query);
     </div>
 
     <script>
-    // Sehemu ya ku-print ripoti
+    // print riport
     document.getElementById('printBtn').addEventListener('click', function() { 
         window.print(); 
     });
 
-    // Sehemu ya kutafuta mwanafunzi (Search Engine)
+    //  (Search Engine)
     document.getElementById('search').addEventListener('input', function() {
         var q = this.value.toLowerCase();
         var rows = document.querySelectorAll('#reportBody tr');

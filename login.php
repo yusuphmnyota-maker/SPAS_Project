@@ -5,20 +5,20 @@ include('config/connection.php');
 $message = '';
 
 if (isset($_POST['login'])) {
-    // Kulinda data dhidi ya udukuzi (SQL Injection Protection)
+ 
     $username = mysqli_real_escape_string($conn, trim($_POST['username']));
     $password = mysqli_real_escape_string($conn, trim($_POST['password']));
 
     if (empty($username) || empty($password)) {
         $message = 'Please fill all fields.';
     } else {
-        // Query ya kawaida ya uhakika inayokubalika kwenye toleo lolote la XAMPP
+      
         $query = "SELECT * FROM users WHERE username='$username' AND password='$password'";
         $result = mysqli_query($conn, $query);
 
         if ($result && mysqli_num_rows($result) > 0) {
             $_SESSION['username'] = $username;
-            // Njia salama ya kukupeleka kwenye dashboard
+   
             echo "<script>window.location.href='dashboard.php';</script>"; 
             exit;
         } else {

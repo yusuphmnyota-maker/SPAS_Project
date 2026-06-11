@@ -6,7 +6,7 @@ $action = $_GET['action'] ?? '';
 $message = '';
 $subject_name = '';
 
-// Handle delete
+
 if ($action === 'delete' && !empty($subject_id)) {
     $stmt = $conn->prepare("DELETE FROM subjects WHERE subject_id = ?");
     $stmt->bind_param('i', $subject_id);
@@ -17,7 +17,6 @@ if ($action === 'delete' && !empty($subject_id)) {
     $stmt->close();
 }
 
-// Fetch subject for editing
 if (!empty($subject_id)) {
     $stmt = $conn->prepare("SELECT * FROM subjects WHERE subject_id = ?");
     $stmt->bind_param('i', $subject_id);
