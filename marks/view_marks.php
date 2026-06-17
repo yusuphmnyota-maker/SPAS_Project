@@ -1,26 +1,20 @@
 <?php
 include('../config/connection.php');
 
-// Fetch subjects for column headings
-$subjects = [];
-$subjectResult = $conn->query("SELECT subject_id, subject_name FROM subjects ORDER BY subject_name");
-if ($subjectResult) {
-    while ($subject = $subjectResult->fetch_assoc()) {
-        $subjects[] = $subject;
-    }
-}
+try {
+    // Fetch subjects for column headings using PDO
+    $subjects = $pdo->query("SELECT subject_id, subject_name FROM subjects ORDER BY subject_name")->fetchAll();
 
-// Fetch student marks and combine them
-$query = "SELECT s.student_id, s.firstname, s.lastname, sub.subject_id, m.marks, m.mark_id
-          FROM students s
-          LEFT JOIN marks m ON s.student_id = m.student_id
-          LEFT JOIN subjects sub ON m.subject_id = sub.subject_id
-          ORDER BY s.firstname, s.lastname";
-$result = $conn->query($query);
+    // Fetch student marks and combine them using PDO
+    $query = "SELECT s.student_id, s.firstname, s.lastname, sub.subject_id, m.marks, m.mark_id
+              FROM students s
+              LEFT JOIN marks m ON s.student_id = m.student_id
+              LEFT JOIN subjects sub ON m.subject_id = sub.subject_id
+              ORDER BY s.firstname, s.lastname";
+    $results = $pdo->query($query)->fetchAll();
 
-$students = [];
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
+    $students = [];
+    foreach ($results as $row) {
         $sid = $row['student_id'];
         if (!isset($students[$sid])) {
             $students[$sid] = [
@@ -40,20 +34,23 @@ if ($result) {
             $students[$sid]['count']++;
         }
     }
-}
 
-// Calculate averages
-foreach ($students as &$student) {
-    if ($student['count'] > 0) {
-        $student['average'] = $student['sum'] / $student['count'];
+    // Calculate averages
+    foreach ($students as &$student) {
+        if ($student['count'] > 0) {
+            $student['average'] = $student['sum'] / $student['count'];
+        }
     }
-}
-unset($student);
+    unset($student);
 
-// Sort students by average (Highest to Lowest)
-usort($students, function($a, $b) {
-    return $b['average'] <=> $a['average'];
-});
+    // Sort students by average (Highest to Lowest)
+    usort($students, function($a, $b) {
+        return $b['average'] <=> $a['average'];
+    });
+
+} catch (PDOException $e) {
+    die("Database error: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>

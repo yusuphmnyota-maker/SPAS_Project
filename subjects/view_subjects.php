@@ -3,8 +3,10 @@ include('../config/connection.php');
 
 $message = $_GET['message'] ?? '';
 
+// Using PDO to fetch subjects
 $query = "SELECT * FROM subjects ORDER BY subject_name";
-$result = $conn->query($query);
+$stmt = $pdo->query($query);
+$subjects = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -36,12 +38,12 @@ $result = $conn->query($query);
                 </tr>
             </thead>
             <tbody>
-                <?php if ($result && $result->num_rows == 0): ?>
+                <?php if (empty($subjects)): ?>
                     <tr>
                         <td colspan="2" class="no-data">No subjects found.</td>
                     </tr>
                 <?php else: ?>
-                    <?php while ($subject = $result->fetch_assoc()): ?>
+                    <?php foreach ($subjects as $subject): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($subject['subject_name']); ?></td>
                             <td class="center">
@@ -49,11 +51,10 @@ $result = $conn->query($query);
                                 <a href="edit_subject.php?id=<?php echo $subject['subject_id']; ?>&action=delete" class="btn-delete" onclick="return confirm('Delete this subject?');">Delete</a>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
 </body>
 </html>
-

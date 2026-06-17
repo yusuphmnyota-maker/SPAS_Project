@@ -1,7 +1,15 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "spas_db");
+$host     = 'localhost';
+$db_name  = 'spas_db';
+$username = 'root';
+$password = '';
 
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+try {
+    $dsn = "mysql:host=$host;dbname=$db_name;charset=utf8mb4";
+    $pdo = new PDO($dsn, $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 ?>

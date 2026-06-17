@@ -1,28 +1,42 @@
 <?php
 session_start();
-include('config/connection.php');
+include('config/connection.php'); 
 
 $message = '';
 
 if (isset($_POST['login'])) {
- 
-    $username = mysqli_real_escape_string($conn, trim($_POST['username']));
-    $password = mysqli_real_escape_string($conn, trim($_POST['password']));
+    
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
     if (empty($username) || empty($password)) {
         $message = 'Please fill all fields.';
     } else {
-      
-        $query = "SELECT * FROM users WHERE username='$username' AND password='$password'";
-        $result = mysqli_query($conn, $query);
+        try {
+            
+            $query = "SELECT * FROM users WHERE username = :username AND password = :password";
+            $stmt = $pdo->prepare($query);
+            
+            
+            $stmt->execute([
+                ':username' => $username,
+                ':password' => $password
+            ]);
 
-        if ($result && mysqli_num_rows($result) > 0) {
-            $_SESSION['username'] = $username;
-   
-            echo "<script>window.location.href='dashboard.php';</script>"; 
-            exit;
-        } else {
-            $message = 'Invalid Username or Password';
+            
+            $user = $stmt->fetch();
+
+            if ($user) {
+                $_SESSION['username'] = $user['username']; 
+       
+                echo "<script>window.location.href='dashboard.php';</script>"; 
+                exit;
+            } else {
+                $message = 'Invalid Username or Password';
+            }
+        } catch (PDOException $e) {
+            
+        $message = 'Database error: ' . $e->getMessage();
         }
     }
 }

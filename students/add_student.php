@@ -12,15 +12,18 @@ if (isset($_POST['save'])) {
     if (empty($firstname) || empty($lastname) || empty($class) || empty($gender)) {
         $message = "All fields are required!";
     } else {
-        $stmt = $conn->prepare("INSERT INTO students (firstname, lastname, class, gender) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $firstname, $lastname, $class, $gender);
-        
-        if ($stmt->execute()) {
-            $message = "Student Added Successfully!";
-        } else {
-            $message = "Error adding student.";
+        try {
+            // Using PDO prepared statements
+            $stmt = $pdo->prepare("INSERT INTO students (firstname, lastname, class, gender) VALUES (?, ?, ?, ?)");
+            
+            if ($stmt->execute([$firstname, $lastname, $class, $gender])) {
+                $message = "Student Added Successfully!";
+            } else {
+                $message = "Error adding student.";
+            }
+        } catch (PDOException $e) {
+            $message = "Database error: " . $e->getMessage();
         }
-        $stmt->close();
     }
 }
 ?>

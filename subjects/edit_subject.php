@@ -6,45 +6,44 @@ $action = $_GET['action'] ?? '';
 $message = '';
 $subject_name = '';
 
-
-if ($action === 'delete' && !empty($subject_id)) {
-    $stmt = $conn->prepare("DELETE FROM subjects WHERE subject_id = ?");
-    $stmt->bind_param('i', $subject_id);
-    if ($stmt->execute()) {
-        header('Location: view_subject.php?message=' . urlencode('Subject deleted successfully'));
-        exit();
-    }
-    $stmt->close();
-}
-
-if (!empty($subject_id)) {
-    $stmt = $conn->prepare("SELECT * FROM subjects WHERE subject_id = ?");
-    $stmt->bind_param('i', $subject_id);
-    $stmt->execute();
-    $subject = $stmt->get_result()->fetch_assoc();
-    if ($subject) {
-        $subject_name = $subject['subject_name'];
-    }
-    $stmt->close();
-}
-
-// Handle update
-if (isset($_POST['update'])) {
-    $subject_id = $_POST['subject_id'];
-    $subject_name = trim($_POST['subject_name'] ?? '');
-
-    if ($subject_name === '') {
-        $message = 'Subject name cannot be empty.';
-    } else {
-        $stmt = $conn->prepare("UPDATE subjects SET subject_name = ? WHERE subject_id = ?");
-        $stmt->bind_param('si', $subject_name, $subject_id);
-        if ($stmt->execute()) {
-            $message = 'Subject updated successfully!';
-        } else {
-            $message = 'Error updating subject.';
+try {
+    // Handle delete
+    if ($action === 'delete' && !empty($subject_id)) {
+        $stmt = $pdo->prepare("DELETE FROM subjects WHERE subject_id = ?");
+        if ($stmt->execute([$subject_id])) {
+            header('Location: view_subject.php?message=' . urlencode('Subject deleted successfully'));
+            exit();
         }
-        $stmt->close();
     }
+
+    // Fetch subject details
+    if (!empty($subject_id)) {
+        $stmt = $pdo->prepare("SELECT * FROM subjects WHERE subject_id = ?");
+        $stmt->execute([$subject_id]);
+        $subject = $stmt->fetch();
+        if ($subject) {
+            $subject_name = $subject['subject_name'];
+        }
+    }
+
+    // Handle update
+    if (isset($_POST['update'])) {
+        $subject_id = $_POST['subject_id'];
+        $subject_name = trim($_POST['subject_name'] ?? '');
+
+        if ($subject_name === '') {
+            $message = 'Subject name cannot be empty.';
+        } else {
+            $stmt = $pdo->prepare("UPDATE subjects SET subject_name = ? WHERE subject_id = ?");
+            if ($stmt->execute([$subject_name, $subject_id])) {
+                $message = 'Subject updated successfully!';
+            } else {
+                $message = 'Error updating subject.';
+            }
+        }
+    }
+} catch (PDOException $e) {
+    $message = "Database error: " . $e->getMessage();
 }
 
 if (empty($subject_id) && !isset($_POST['update'])) {

@@ -6,33 +6,36 @@ $selectedStudent = '';
 $selectedSubject = '';
 $marksValue = '';
 
-// Fetch active lists for options
-$students = $conn->query("SELECT student_id, firstname, lastname FROM students ORDER BY firstname, lastname");
-$subjects = $conn->query("SELECT subject_id, subject_name FROM subjects ORDER BY subject_name");
+try {
+    // Fetch active lists using PDO
+    $students = $pdo->query("SELECT student_id, firstname, lastname FROM students ORDER BY firstname, lastname")->fetchAll();
+    $subjects = $pdo->query("SELECT subject_id, subject_name FROM subjects ORDER BY subject_name")->fetchAll();
 
-if (isset($_POST['save'])) {
-    $selectedStudent = $_POST['student_id'] ?? '';
-    $selectedSubject = $_POST['subject_id'] ?? '';
-    $marksValue = trim($_POST['marks'] ?? '');
+    if (isset($_POST['save'])) {
+        $selectedStudent = $_POST['student_id'] ?? '';
+        $selectedSubject = $_POST['subject_id'] ?? '';
+        $marksValue = trim($_POST['marks'] ?? '');
 
-    if (empty($selectedStudent) || empty($selectedSubject) || $marksValue === '') {
-        $message = "All fields are required.";
-    } elseif (!is_numeric($marksValue) || $marksValue < 0 || $marksValue > 100) {
-        $message = "Marks must be a number between 0 and 100.";
-    } else {
-        $stmt = $conn->prepare("INSERT INTO marks (student_id, subject_id, marks) VALUES (?, ?, ?)");
-        $stmt->bind_param("iii", $selectedStudent, $selectedSubject, $marksValue);
-        
-        if ($stmt->execute()) {
-            $message = "Marks added successfully.";
-            $selectedStudent = '';
-            $selectedSubject = '';
-            $marksValue = '';
+        if (empty($selectedStudent) || empty($selectedSubject) || $marksValue === '') {
+            $message = "All fields are required.";
+        } elseif (!is_numeric($marksValue) || $marksValue < 0 || $marksValue > 100) {
+            $message = "Marks must be a number between 0 and 100.";
         } else {
-            $message = "Unable to save marks.";
+            // Using PDO prepared statements
+            $stmt = $pdo->prepare("INSERT INTO marks (student_id, subject_id, marks) VALUES (?, ?, ?)");
+            
+            if ($stmt->execute([$selectedStudent, $selectedSubject, $marksValue])) {
+                $message = "Marks added successfully.";
+                $selectedStudent = '';
+                $selectedSubject = '';
+                $marksValue = '';
+            } else {
+                $message = "Unable to save marks.";
+            }
         }
-        $stmt->close();
     }
+} catch (PDOException $e) {
+    $message = "Database error: " . $e->getMessage();
 }
 ?>
 
@@ -56,24 +59,24 @@ if (isset($_POST['save'])) {
             <label>Student</label>
             <select name="student_id" required>
                 <option value="">Select student</option>
-                <?php if ($students && $students->num_rows): ?>
-                    <?php while ($student = $students->fetch_assoc()): ?>
+                <?php if (!empty($students)): ?>
+                    <?php foreach ($students as $student): ?>
                         <option value="<?php echo $student['student_id']; ?>" <?php echo ($selectedStudent == $student['student_id']) ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($student['firstname'] . ' ' . $student['lastname']); ?>
                         </option>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </select>
 
             <label>Subject</label>
             <select name="subject_id" required>
                 <option value="">Select subject</option>
-                <?php if ($subjects && $subjects->num_rows): ?>
-                    <?php while ($subject = $subjects->fetch_assoc()): ?>
+                <?php if (!empty($subjects)): ?>
+                    <?php foreach ($subjects as $subject): ?>
                         <option value="<?php echo $subject['subject_id']; ?>" <?php echo ($selectedSubject == $subject['subject_id']) ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($subject['subject_name']); ?>
                         </option>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </select>
 

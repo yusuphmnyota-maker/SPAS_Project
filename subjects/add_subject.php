@@ -10,16 +10,19 @@ if (isset($_POST['save'])) {
     if ($subject_name === '') {
         $message = 'Please enter a subject name.';
     } else {
-        $stmt = $conn->prepare("INSERT INTO subjects (subject_name) VALUES (?)");
-        $stmt->bind_param('s', $subject_name);
-        
-        if ($stmt->execute()) {
-            $message = 'Subject added successfully!';
-            $subject_name = '';
-        } else {
-            $message = 'Error adding subject.';
+        try {
+            // Using PDO prepared statements
+            $stmt = $pdo->prepare("INSERT INTO subjects (subject_name) VALUES (?)");
+            
+            if ($stmt->execute([$subject_name])) {
+                $message = 'Subject added successfully!';
+                $subject_name = '';
+            } else {
+                $message = 'Error adding subject.';
+            }
+        } catch (PDOException $e) {
+            $message = "Database error: " . $e->getMessage();
         }
-        $stmt->close();
     }
 }
 ?>
@@ -50,4 +53,3 @@ if (isset($_POST['save'])) {
     </div>
 </body>
 </html>
-

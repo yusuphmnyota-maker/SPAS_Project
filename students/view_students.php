@@ -1,8 +1,10 @@
 <?php
 include('../config/connection.php');
 
-$query = "SELECT * FROM students ORDER BY firstname, lastname";
-$result = mysqli_query($conn, $query);
+// Fetch subjects using PDO
+$query = "SELECT * FROM subjects ORDER BY subject_name";
+$stmt = $pdo->query($query);
+$subjects = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -10,46 +12,42 @@ $result = mysqli_query($conn, $query);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Students List</title>
+    <title>Subjects List</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <div class="list-box">
-        <h2>Students List</h2>
+        <h2>Subjects List</h2>
         
         <nav class="action-links">
-            <a href="add_student.php" class="btn-primary">+ Add Student</a>
+            <a href="add_subject.php" class="btn-primary">+ Add Subject</a>
             <a href="../dashboard.php" class="btn-link">Dashboard</a>
         </nav>
 
         <table class="students-table">
             <thead>
                 <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Gender</th>
-                    <th>Class</th>
+                    <th>Subject ID</th>
+                    <th>Subject Name</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if (mysqli_num_rows($result) == 0): ?>
+                <?php if (empty($subjects)): ?>
                     <tr>
-                        <td colspan="5" class="no-data">No students found.</td>
+                        <td colspan="3" class="no-data">No subjects found.</td>
                     </tr>
                 <?php else: ?>
-                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                    <?php foreach ($subjects as $row): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($row['firstname']); ?></td>
-                            <td><?php echo htmlspecialchars($row['lastname']); ?></td>
-                            <td><?php echo htmlspecialchars($row['gender']); ?></td>
-                            <td><?php echo htmlspecialchars($row['class']); ?></td>
+                            <td><?php echo htmlspecialchars($row['subject_id']); ?></td>
+                            <td><?php echo htmlspecialchars($row['subject_name']); ?></td>
                             <td class="center">
-                                <a href="edit_student.php?id=<?php echo $row['student_id']; ?>" class="btn-edit">Edit</a>
-                                <a href="edit_student.php?id=<?php echo $row['student_id']; ?>&action=delete" class="btn-delete" onclick="return confirm('Delete this student?')">Delete</a>
+                                <a href="edit_subject.php?id=<?php echo $row['subject_id']; ?>" class="btn-edit">Edit</a>
+                                <a href="edit_subject.php?id=<?php echo $row['subject_id']; ?>&action=delete" class="btn-delete" onclick="return confirm('Delete this subject?')">Delete</a>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>
